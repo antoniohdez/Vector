@@ -10,7 +10,9 @@ int main(void){
 	VectorNew(&v, sizeof(int), NULL, 8);
 	printf("Vector creado!\n");
 	printf("Size: %d\n", VectorLength(&v));
-
+	int i = 1;
+	VectorAppend(&v,&i);
+	printf("Size: %d\n", VectorLength(&v));
 	return 0;
 }
 
@@ -50,7 +52,15 @@ void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza mem
 }
 
 void VectorAppend(vector *v, const void *elemAddr)
-{}
+{
+	if(v->pos == v->memSize){
+		v->memSize += v->reSize;
+		v->elems = realloc(v->elems,v->memSize*v->elemSize);
+	}
+	elemAddr =  (char *)v->elems + v->pos * v->elemSize;
+	memcpy(elemAddr,&elemAddr,v->elemSize);
+	v->pos++;
+}
 
 void VectorDelete(vector *v, int position)
 {}
