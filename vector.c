@@ -13,6 +13,9 @@ int main(void){
 	int i = 1;
 	VectorAppend(&v,&i);
 	printf("Size: %d\n", VectorLength(&v));
+	VectorInsert(&v, &i, 2);
+	printf("%p\n", VectorNth(&v, 0));
+	printf("%p\n", VectorNth(&v, 1));
 	return 0;
 }
 
@@ -36,13 +39,22 @@ int VectorLength(const vector *v)
 }
 
 void *VectorNth(const vector *v, int position)//Regresa la posición de memoria del elemento
-{ return NULL; }
+{ 
+	if(position >= 0 && position <= v->pos){
+		printf("position %d\n", position);
+		return v->elems + (v->elemSize*position);
+	}
+	return NULL;
+}
 
 void VectorReplace(vector *v, const void *elemAddr, int position)
 {}
 
 void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza memmove
 {
+	if(position >= 0 && position <= v->pos){
+		printf("Se inserto en la posición %d\n", position);
+	}
 	//if( pos > 0 && position < pos)
 		//...
 	//data apuntador (dentro de la estructura) al vector
