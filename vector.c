@@ -22,7 +22,8 @@ int main(void){
 	i++;
 	VectorAppend(&v, &i);
 	i++;
-	VectorInsert(&v, &i, 1);
+	//VectorInsert(&v, &i, 1);
+	VectorDelete(&v, 1);
 
 	printf("%d\n", *(int *)VectorNth(&v, 0) );
 	printf("%d\n", *(int *)VectorNth(&v, 1) );
@@ -30,7 +31,7 @@ int main(void){
 	printf("%d\n", *(int *)VectorNth(&v, 3) );
 	printf("%d\n", *(int *)VectorNth(&v, 4) );
 	printf("%d\n", *(int *)VectorNth(&v, 5) );
-	printf("%d\n", *(int *)VectorNth(&v, 6) );
+	//printf("%d\n", *(int *)VectorNth(&v, 6) );
 
 	return 0;
 }
@@ -75,7 +76,7 @@ void *VectorNth(const vector *v, int position)//Regresa la posición de memoria 
 void VectorReplace(vector *v, const void *elemAddr, int position)
 {
 	if(position >= 0 && position <= v->pos){
-		void * elemNewAddr = v->elems + position*v->elemSize;
+		void * elemNewAddr = (char *)v->elems + position*v->elemSize;
 		memcpy(elemNewAddr,elemAddr,v->elemSize);
 	}
 }
@@ -89,8 +90,8 @@ void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza mem
 			printf("Insertando en la posición %d...\n", position);
 			void * elemNewAddr;
 			void * addrDest;
-			elemNewAddr = v->elems + position*v->elemSize;
-			addrDest = elemNewAddr + v->elemSize;
+			elemNewAddr = (char *) v->elems + position*v->elemSize;
+			addrDest = (char *) elemNewAddr + v->elemSize;
 			size_t memSize= ( v->elems + v->pos*v->elemSize ) - ( elemNewAddr );
 			memmove(addrDest, elemNewAddr, memSize);
 			memcpy(elemNewAddr, elemAddr, v->elemSize);
@@ -105,13 +106,24 @@ void VectorAppend(vector *v, const void *elemAddr)
 		v->elems = realloc(v->elems,v->memSize*v->elemSize);
 	}
 	void * elemNewAddr;
-	elemNewAddr =  v->elems + v->pos * v->elemSize;
+	elemNewAddr = (char *) v->elems + v->pos * v->elemSize;
 	memcpy(elemNewAddr,elemAddr,v->elemSize);
 	v->pos++;
 }
 
 void VectorDelete(vector *v, int position)
-{}
+{
+	if(position >= 0 && position <= v->pos){
+		printf("Elimiando de la posición %d...\n", position);
+		void * memNewAddr;
+		void * memOldAddr;
+		memNewAddr = (char *) v->elems + position*v->elemSize;
+		memOldAddr = (char *) memNewAddr + v->elemSize;
+		size_t memSize = ( v->elems + v->pos*v->elemSize ) - ( memOldAddr );
+		memmove(memNewAddr, memOldAddr, memSize);
+		v->pos--;
+	}	
+}
 
 void VectorSort(vector *v, VectorCompareFunction compare)
 {}
