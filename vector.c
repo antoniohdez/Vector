@@ -7,25 +7,30 @@
 int main(void){
 	printf("Creando vector...\n");
 	vector v;
-	VectorNew(&v, sizeof(int), NULL, 8);
+	VectorNew(&v, sizeof(int), NULL, 10);
 	printf("Vector creado!\n");
-	printf("Size: %d\n", VectorLength(&v));
-	int i = 5;
-	VectorAppend(&v,&i);
-	printf("Size: %d\n", VectorLength(&v));
-	i--;
+	int i = 0;
 	VectorAppend(&v, &i);
-	i--;
-	printf("Size: %d\n", VectorLength(&v));
-	VectorDispose(&v);
+	i++;
+	VectorAppend(&v, &i);
+	i++;
+	VectorAppend(&v, &i);
+	i++;
+	VectorAppend(&v, &i);
+	i++;
+	VectorAppend(&v, &i);
+	i++;
+	VectorAppend(&v, &i);
+	i++;
+	VectorInsert(&v, &i, 1);
 
 	printf("%d\n", *(int *)VectorNth(&v, 0) );
 	printf("%d\n", *(int *)VectorNth(&v, 1) );
-
-	VectorReplace(&v, &i,1);
-	
-	printf("%d\n", *(int *)VectorNth(&v, 0) );
-	printf("%d\n", *(int *)VectorNth(&v, 1) );
+	printf("%d\n", *(int *)VectorNth(&v, 2) );
+	printf("%d\n", *(int *)VectorNth(&v, 3) );
+	printf("%d\n", *(int *)VectorNth(&v, 4) );
+	printf("%d\n", *(int *)VectorNth(&v, 5) );
+	printf("%d\n", *(int *)VectorNth(&v, 6) );
 
 	return 0;
 }
@@ -78,14 +83,19 @@ void VectorReplace(vector *v, const void *elemAddr, int position)
 void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza memmove
 {
 	if(position >= 0 && position <= v->pos){
-		printf("Se inserto en la posición %d\n", position);
+		if(position == v->pos){
+			VectorAppend(v, elemAddr);
+		}else{
+			printf("Insertando en la posición %d...\n", position);
+			void * elemNewAddr;
+			void * addrDest;
+			elemNewAddr = v->elems + position*v->elemSize;
+			addrDest = elemNewAddr + v->elemSize;
+			size_t memSize= ( v->elems + v->pos*v->elemSize ) - ( elemNewAddr );
+			memmove(addrDest, elemNewAddr, memSize);
+			memcpy(elemNewAddr, elemAddr, v->elemSize);
+		}
 	}
-	//if( pos > 0 && position < pos)
-		//...
-	//data apuntador (dentro de la estructura) al vector
-	//*elemInsert = (char *) data + position*elemSize;
-	//*elemNext = (char * ) data + (position+1)*elemSize;
-	//memmove(elemNext, elemInsert ...);
 }
 
 void VectorAppend(vector *v, const void *elemAddr)
