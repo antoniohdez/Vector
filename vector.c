@@ -13,9 +13,12 @@ int main(void){
 	int i = 1;
 	VectorAppend(&v,&i);
 	printf("Size: %d\n", VectorLength(&v));
-	VectorInsert(&v, &i, 2);
-	printf("%p\n", VectorNth(&v, 0));
-	printf("%p\n", VectorNth(&v, 1));
+	i--;
+	VectorAppend(&v, &i);
+	printf("Size: %d\n", VectorLength(&v));
+
+	printf("%d\n", *(int *)VectorNth(&v, 0) );
+	printf("%d\n", *(int *)VectorNth(&v, 1) );
 	return 0;
 }
 
@@ -41,8 +44,7 @@ int VectorLength(const vector *v)
 void *VectorNth(const vector *v, int position)//Regresa la posición de memoria del elemento
 { 
 	if(position >= 0 && position <= v->pos){
-		printf("position %d\n", position);
-		return v->elems + (v->elemSize*position);
+		return v->elems + v->elemSize*position;
 	}
 	return NULL;
 }
@@ -69,8 +71,9 @@ void VectorAppend(vector *v, const void *elemAddr)
 		v->memSize += v->reSize;
 		v->elems = realloc(v->elems,v->memSize*v->elemSize);
 	}
-	elemAddr =  (char *)v->elems + v->pos * v->elemSize;
-	memcpy(elemAddr,&elemAddr,v->elemSize);
+	void* elemAddrDest;
+	elemAddrDest =  (char *)v->elems + v->pos * v->elemSize;
+	memcpy(elemAddrDest,elemAddr,v->elemSize);
 	v->pos++;
 }
 
