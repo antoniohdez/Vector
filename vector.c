@@ -129,7 +129,14 @@ void VectorSort(vector *v, VectorCompareFunction compare)
 {}
 
 void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)//auxData se usa como segundo argumento de la funcipn mapFn
-{}
+{
+	int i;
+	void * elemAddr;
+	for(i = 0; i < v->pos; i++){
+		elemAddr = (char *)v->elems + v->elemSize*position;
+		mapFn(elemAddr, auxData);
+	}
+}
 
 static const int kNotFound = -1;
 int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchFn, int startIndex, bool isSorted)//lfind para busqueda lineal
