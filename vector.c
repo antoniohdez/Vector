@@ -15,10 +15,18 @@ int main(void){
 	printf("Size: %d\n", VectorLength(&v));
 	i--;
 	VectorAppend(&v, &i);
+	i--;
 	printf("Size: %d\n", VectorLength(&v));
 	VectorDispose(&v);
+
 	printf("%d\n", *(int *)VectorNth(&v, 0) );
 	printf("%d\n", *(int *)VectorNth(&v, 1) );
+
+	VectorReplace(&v, &i,1);
+	
+	printf("%d\n", *(int *)VectorNth(&v, 0) );
+	printf("%d\n", *(int *)VectorNth(&v, 1) );
+
 	return 0;
 }
 
@@ -60,7 +68,12 @@ void *VectorNth(const vector *v, int position)//Regresa la posición de memoria 
 }
 
 void VectorReplace(vector *v, const void *elemAddr, int position)
-{}
+{
+	if(position >= 0 && position <= v->pos){
+		void * elemNewAddr = v->elems + position*v->elemSize;
+		memcpy(elemNewAddr,elemAddr,v->elemSize);
+	}
+}
 
 void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza memmove
 {
@@ -81,9 +94,9 @@ void VectorAppend(vector *v, const void *elemAddr)
 		v->memSize += v->reSize;
 		v->elems = realloc(v->elems,v->memSize*v->elemSize);
 	}
-	void* elemAddrDest;
-	elemAddrDest =  (char *)v->elems + v->pos * v->elemSize;
-	memcpy(elemAddrDest,elemAddr,v->elemSize);
+	void * elemNewAddr;
+	elemNewAddr =  v->elems + v->pos * v->elemSize;
+	memcpy(elemNewAddr,elemAddr,v->elemSize);
 	v->pos++;
 }
 
