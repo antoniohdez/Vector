@@ -10,13 +10,13 @@ int main(void){
 	VectorNew(&v, sizeof(int), NULL, 8);
 	printf("Vector creado!\n");
 	printf("Size: %d\n", VectorLength(&v));
-	int i = 1;
+	int i = 5;
 	VectorAppend(&v,&i);
 	printf("Size: %d\n", VectorLength(&v));
 	i--;
 	VectorAppend(&v, &i);
 	printf("Size: %d\n", VectorLength(&v));
-
+	VectorDispose(&v);
 	printf("%d\n", *(int *)VectorNth(&v, 0) );
 	printf("%d\n", *(int *)VectorNth(&v, 1) );
 	return 0;
@@ -34,7 +34,17 @@ void VectorNew(vector *v, int elemSize, VectorFreeFunction freeFn, int initialAl
 }
 
 void VectorDispose(vector *v)//Borra los elementos del vector, se hace free con la función freeFn
-{}
+{
+	int i;
+	void *elemAddr;
+	if(v->freeFn != NULL){
+		for(i = 0; i < v->pos; i++){
+			v->freeFn( (char *)v->elems + i*v->elemSize );
+		}
+	}
+	free(v->elems);
+	printf("Vector eliminado\n");
+}
 
 int VectorLength(const vector *v)
 {
