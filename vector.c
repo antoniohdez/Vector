@@ -22,8 +22,8 @@ int main(void){
 	i++;
 	VectorAppend(&v, &i);
 	i++;
-	//VectorInsert(&v, &i, 1);
-	VectorDelete(&v, 1);
+	VectorInsert(&v, &i, 1);
+	VectorDelete(&v, 2);
 
 	printf("%d\n", *(int *)VectorNth(&v, 0) );
 	printf("%d\n", *(int *)VectorNth(&v, 1) );
@@ -31,7 +31,6 @@ int main(void){
 	printf("%d\n", *(int *)VectorNth(&v, 3) );
 	printf("%d\n", *(int *)VectorNth(&v, 4) );
 	printf("%d\n", *(int *)VectorNth(&v, 5) );
-	//printf("%d\n", *(int *)VectorNth(&v, 6) );
 
 	return 0;
 }
@@ -95,6 +94,7 @@ void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza mem
 			size_t memSize= ( v->elems + v->pos*v->elemSize ) - ( elemNewAddr );
 			memmove(addrDest, elemNewAddr, memSize);
 			memcpy(elemNewAddr, elemAddr, v->elemSize);
+			v->pos++;
 		}
 	}
 }
