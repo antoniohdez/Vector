@@ -7,7 +7,7 @@
 int main(void){
 	printf("Creando vector...\n");
 	vector v;
-	VectorNew(&v, sizeof(int), NULL, 10);
+	VectorNew(&v, sizeof(int), NULL, 2);
 	printf("Vector creado!\n");
 	int i = 0;
 	VectorAppend(&v, &i);
@@ -86,10 +86,14 @@ void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza mem
 		if(position == v->pos){
 			VectorAppend(v, elemAddr);
 		}else{
+			if(v->pos == v->memSize){
+				v->memSize += v->reSize;
+				v->elems = realloc(v->elems, (v->memSize + v->reSize) );
+			}
 			printf("Insertando en la posición %d...\n", position);
 			void * elemNewAddr;
 			void * addrDest;
-			elemNewAddr = (char *) v->elems + position*v->elemSize;
+			elemNewAddr =  (char *) v->elems + position*v->elemSize;
 			addrDest = (char *) elemNewAddr + v->elemSize;
 			size_t memSize= ( v->elems + v->pos*v->elemSize ) - ( elemNewAddr );
 			memmove(addrDest, elemNewAddr, memSize);
@@ -133,7 +137,7 @@ void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)//auxData se us
 	int i;
 	void * elemAddr;
 	for(i = 0; i < v->pos; i++){
-		elemAddr = (char *)v->elems + v->elemSize*position;
+		elemAddr = (char *)v->elems + v->elemSize*v->pos;
 		mapFn(elemAddr, auxData);
 	}
 }
