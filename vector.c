@@ -4,36 +4,25 @@
 #include <string.h>
 #include <assert.h>
 
+/*
 int main(void){
 	printf("Creando vector...\n");
 	vector v;
 	VectorNew(&v, sizeof(int), NULL, 2);
 	printf("Vector creado!\n");
-	int i = 0;
-	VectorAppend(&v, &i);
-	i++;
-	VectorAppend(&v, &i);
-	i++;
-	VectorAppend(&v, &i);
-	i++;
-	VectorAppend(&v, &i);
-	i++;
-	VectorAppend(&v, &i);
-	i++;
-	VectorAppend(&v, &i);
-	i++;
+	int i;
+	for(i = 0; i < 20; i++){
+		VectorInsert(&v, &i, i);
+	}
+	for(i = 0; i < 20; i++){
+		printf("%d\n", *(int *)VectorNth(&v, i) );
+	}
 	VectorInsert(&v, &i, 1);
 	VectorDelete(&v, 2);
 
-	printf("%d\n", *(int *)VectorNth(&v, 0) );
-	printf("%d\n", *(int *)VectorNth(&v, 1) );
-	printf("%d\n", *(int *)VectorNth(&v, 2) );
-	printf("%d\n", *(int *)VectorNth(&v, 3) );
-	printf("%d\n", *(int *)VectorNth(&v, 4) );
-	printf("%d\n", *(int *)VectorNth(&v, 5) );
-
 	return 0;
 }
+*/
 
 void VectorNew(vector *v, int elemSize, VectorFreeFunction freeFn, int initialAllocation)
 {
@@ -56,7 +45,7 @@ void VectorDispose(vector *v)//Borra los elementos del vector, se hace free con 
 		}
 	}
 	free(v->elems);
-	printf("Vector eliminado\n");
+	//printf("Vector eliminado\n");
 }
 
 int VectorLength(const vector *v)
@@ -67,7 +56,7 @@ int VectorLength(const vector *v)
 void *VectorNth(const vector *v, int position)//Regresa la posición de memoria del elemento
 { 
 	if(position >= 0 && position <= v->pos){
-		return v->elems + v->elemSize*position;
+		return (char *)v->elems + v->elemSize*position;
 	}
 	return NULL;
 }
@@ -90,7 +79,7 @@ void VectorInsert(vector *v, const void *elemAddr, int position)//Se utiliza mem
 				v->memSize += v->reSize;
 				v->elems = realloc(v->elems, (v->memSize + v->reSize) );
 			}
-			printf("Insertando en la posición %d...\n", position);
+			//printf("Insertando en la posición %d...\n", position);
 			void * elemNewAddr;
 			void * addrDest;
 			elemNewAddr =  (char *) v->elems + position*v->elemSize;
@@ -118,7 +107,7 @@ void VectorAppend(vector *v, const void *elemAddr)
 void VectorDelete(vector *v, int position)
 {
 	if(position >= 0 && position <= v->pos){
-		printf("Elimiando de la posición %d...\n", position);
+		//printf("Elimiando de la posición %d...\n", position);
 		void * memNewAddr;
 		void * memOldAddr;
 		memNewAddr = (char *) v->elems + position*v->elemSize;
@@ -130,18 +119,24 @@ void VectorDelete(vector *v, int position)
 }
 
 void VectorSort(vector *v, VectorCompareFunction compare)
-{}
+{
+	qsort(v->elems, v->pos, v->elemSize, compare);
+}
 
 void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)//auxData se usa como segundo argumento de la funcipn mapFn
 {
 	int i;
 	void * elemAddr;
 	for(i = 0; i < v->pos; i++){
-		elemAddr = (char *)v->elems + v->elemSize*v->pos;
-		mapFn(elemAddr, auxData);
+		//elemAddr = (char *)v->elems + v->elemSize*v->pos;
+		//mapFn(elemAddr, auxData);
+		mapFn(VectorNth(v, i), auxData);
 	}
 }
 
 static const int kNotFound = -1;
 int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchFn, int startIndex, bool isSorted)//lfind para busqueda lineal
-{ return -1; } 
+{ 
+	
+	return -1;
+} 
