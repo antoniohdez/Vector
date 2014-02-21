@@ -94,14 +94,14 @@ static void TestInsertDelete(vector *alphabet)
   fprintf(stdout, "\nAfter insert dashes: ");
   VectorMap(alphabet, PrintChar, stdout);
   
-  for (i = 3; i < VectorLength(alphabet); i += 3) // Delete every 4th char 
+  for (i = 4; i < VectorLength(alphabet); i += 3) // Delete every 4th char 
     VectorDelete(alphabet, i);
   fprintf(stdout, "\nAfter deleting dashes: ");
   VectorMap(alphabet, PrintChar, stdout);
     
   ch = '!';
   VectorInsert(alphabet, &ch, VectorLength(alphabet));
-  VectorDelete(alphabet, VectorLength(alphabet) - 1);
+  VectorDelete(alphabet, (VectorLength(alphabet) - 1) );
   fprintf(stdout, "\nAfter adding and deleting to very end: ");
   VectorMap(alphabet, PrintChar, stdout);
 }

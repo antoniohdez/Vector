@@ -10,12 +10,12 @@ typedef void (*VectorMapFunction)(void *elemAddr, void *auxData);
 typedef void (*VectorFreeFunction)(void *elemAddr);
 
 typedef struct {
-	void *elems;
-	int elemSize;
-	int pos;
-	int memSize;
-	int reSize;
-	void (*freeFn)(void *);
+	void *elems;//Apunta a la direccion donde se encuentran los elementos
+	int elemSize;//tamaño del tipo de dato
+	int pos;//posicion que apunta a la dirrecion final de los elementos
+	int memSize;//tamaño asignado en memoria
+	int reSize;//tamaño inicial del vector
+	void (*freeFn)(void *);//funcion para borrar los elementos
 } vector;
 
 /** 
